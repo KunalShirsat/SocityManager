@@ -9,6 +9,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.socitymanager.model.ExpenseRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ReceiptService {
             helper.setTo(request.getEmail());
             helper.setSubject("Maintenance Receipt " + receiptNumber);
             helper.setText(buildEmailBody(request, receiptNumber), false);
-            helper.addAttachment("receipt-" + receiptNumber + ".pdf", () -> pdfBytes);
+            helper.addAttachment("receipt-" + receiptNumber + ".pdf", new ByteArrayResource(pdfBytes));
             mailSender.send(message);
         } catch (MessagingException ex) {
             logger.warn("Email sending failed, check mail configuration", ex);
